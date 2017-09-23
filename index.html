@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>JavaScript Obfuscator</title>
+    <style>
+      #dropArea {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        line-height: 100px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dropArea">Drop your .js file here</div>
+
+    <script>
+      // モジュール読み込み
+      const remote = require('electron').remote
+      const obfuscator = require('javascript-obfuscator')
+      const fs = require('fs')
+
+      // droppableの要素
+      const dropAreaElement = document.querySelector('#dropArea')
+
+      /**
+       * イベントの動作と伝播をキャンセル
+       * @param {Object} e イベントオブジェクト
+       */
+      const cancelEvent = e => {
+        e.preventDefault()
+        e.stopPropagation()
+        return false
+      }
+
+      // dragenterとdragoverをキャンセル
+      dropAreaElement.addEventListener('dragenter', cancelEvent);
+      dropAreaElement.addEventListener('dragover', cancelEvent);
+
+      dropAreaElement.addEventListener('drop', e => {
+        const files = [].filter.call(e.dataTransfer.files, file => {
+          return file.type === 'application/javascript'
+        })
+
+        if (files.length > 0) {
+          const reader = new FileReader()
+          reader.addEventListener('load', e => {
+            // .jsファイルを難読化
+            const obfuscatedString = obfuscator.obfuscate(e.target.result)
+            // ダイアログを表示し、保存
+            remote.dialog.showSaveDialog(null, {
+              title: 'ファイルを保存',
+              defaultPath: files[0].name.replace(/(.obf)?\.js$/, '.obf.js')
+            }, filename => {
+              if (filename) {
+                fs.writeFile(filename, obfuscatedString)
+              }
+            })
+          })
+          reader.readAsText(files[0])
+        }
+
+        // dropしたファイルのopenを抑止
+        cancelEvent(e)
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "app-electron-js-obfuscator",
+  "version": "1.0.0",
+  "description": "JavaScript source code obfuscator",
+  "author": "sii",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sii-side/app-electron-js-obfuscator.git"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "javascript-obfuscator": "^0.11.2"
+  }
+}
