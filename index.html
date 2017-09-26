@@ -38,8 +38,8 @@
       }
 
       // dragenterとdragoverをキャンセル
-      dropAreaElement.addEventListener('dragenter', cancelEvent);
-      dropAreaElement.addEventListener('dragover', cancelEvent);
+      dropAreaElement.addEventListener('dragenter', cancelEvent)
+      dropAreaElement.addEventListener('dragover', cancelEvent)
 
       dropAreaElement.addEventListener('drop', e => {
         const files = [].filter.call(e.dataTransfer.files, file => {
